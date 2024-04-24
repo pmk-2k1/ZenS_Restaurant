@@ -1,0 +1,1361 @@
+  [1m[35m (3.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2024-04-24 06:24:01.992257', '2024-04-24 06:24:01.992260') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to DeviseCreateUsers (20240424061601)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime(6), "remember_created_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240424061601') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddJtiToUsers (20240424062230)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ausers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar DEFAULT NULL, "reset_password_sent_at" datetime(6) DEFAULT NULL, "remember_created_at" datetime(6) DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_ausers_on_reset_password_token" ON "ausers" ("reset_password_token")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_ausers_on_email" ON "ausers" ("email")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ausers" ("id","email","encrypted_password","reset_password_token","reset_password_sent_at","remember_created_at","created_at","updated_at")
+                     SELECT "id","email","encrypted_password","reset_password_token","reset_password_sent_at","remember_created_at","created_at","updated_at" FROM "users"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "users"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar DEFAULT NULL, "reset_password_sent_at" datetime(6) DEFAULT NULL, "remember_created_at" datetime(6) DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "jti" varchar NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "users" ("id","email","encrypted_password","reset_password_token","reset_password_sent_at","remember_created_at","created_at","updated_at")
+                     SELECT "id","email","encrypted_password","reset_password_token","reset_password_sent_at","remember_created_at","created_at","updated_at" FROM "ausers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "ausers"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_jti" ON "users" ("jti")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240424062230') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/users" for ::1 at 2024-04-24 13:44:08 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"admin@gmail.com", "password"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"admin@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin@gmail.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at", "jti") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "admin@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2024-04-24 06:44:09.266431"], ["updated_at", "2024-04-24 06:44:09.266431"], ["jti", "a5fdca62-6323-45ac-b36d-50579134c6e4"]]
+  [1m[36mTRANSACTION (5.1ms)[0m  [1m[36mcommit transaction[0m
+Completed 500 Internal Server Error in 273ms (ActiveRecord: 8.4ms | Allocations: 29044)
+
+
+  
+ActionDispatch::Request::Session::DisabledSessionError (Your application has sessions disabled. To write to the session you must first configure a session store):
+  
+actionpack (7.1.3.2) lib/action_dispatch/request/session.rb:260:in `load_for_write!'
+actionpack (7.1.3.2) lib/action_dispatch/request/session.rb:153:in `[]='
+warden (1.2.9) lib/warden/session_serializer.rb:27:in `store'
+warden (1.2.9) lib/warden/proxy.rb:187:in `set_user'
+devise (4.9.4) lib/devise/controllers/sign_in_out.rb:53:in `sign_in'
+devise (4.9.4) app/controllers/devise/registrations_controller.rb:106:in `sign_up'
+devise (4.9.4) app/controllers/devise/registrations_controller.rb:24:in `create'
+actionpack (7.1.3.2) lib/action_controller/metal/basic_implicit_render.rb:6:in `send_action'
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:224:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/rendering.rb:165:in `process_action'
+actionpack (7.1.3.2) lib/abstract_controller/callbacks.rb:259:in `block in process_action'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:110:in `run_callbacks'
+actionpack (7.1.3.2) lib/abstract_controller/callbacks.rb:258:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/rescue.rb:25:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/instrumentation.rb:74:in `block in process_action'
+activesupport (7.1.3.2) lib/active_support/notifications.rb:206:in `block in instrument'
+activesupport (7.1.3.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.1.3.2) lib/active_support/notifications.rb:206:in `instrument'
+actionpack (7.1.3.2) lib/action_controller/metal/instrumentation.rb:73:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/params_wrapper.rb:261:in `process_action'
+activerecord (7.1.3.2) lib/active_record/railties/controller_runtime.rb:32:in `process_action'
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:160:in `process'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:227:in `dispatch'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:309:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:49:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/mapper.rb:21:in `block in <class:Constraints>'
+actionpack (7.1.3.2) lib/action_dispatch/routing/mapper.rb:51:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:51:in `block in serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:131:in `block in find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `each'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:882:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware/token_dispatcher.rb:20:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware/revocation_manager.rb:21:in `call'
+rack (3.0.10) lib/rack/builder.rb:264:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware.rb:22:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.0.10) lib/rack/etag.rb:29:in `call'
+rack (3.0.10) lib/rack/conditional_get.rb:43:in `call'
+rack (3.0.10) lib/rack/head.rb:15:in `call'
+activerecord (7.1.3.2) lib/active_record/migration.rb:655:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (7.1.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `block in tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:39:in `tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `tagged'
+activesupport (7.1.3.2) lib/active_support/broadcast_logger.rb:240:in `method_missing'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/remote_ip.rb:92:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/request_id.rb:28:in `call'
+rack (3.0.10) lib/rack/runtime.rb:24:in `call'
+activesupport (7.1.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:59:in `block in call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:24:in `collect_events'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:58:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/static.rb:25:in `call'
+rack (3.0.10) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/host_authorization.rb:141:in `call'
+rack-cors (2.0.2) lib/rack/cors.rb:102:in `call'
+railties (7.1.3.2) lib/rails/engine.rb:536:in `call'
+puma (6.4.2) lib/puma/configuration.rb:272:in `call'
+puma (6.4.2) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.2) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.2) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.2) lib/puma/server.rb:464:in `process_client'
+puma (6.4.2) lib/puma/server.rb:245:in `block in run'
+puma (6.4.2) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+Started POST "/users" for ::1 at 2024-04-24 13:47:51 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"admin15@gmail.com", "password"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"admin15@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin15@gmail.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at", "jti") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "admin15@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2024-04-24 06:47:52.194907"], ["updated_at", "2024-04-24 06:47:52.194907"], ["jti", "4288b761-a0b2-477b-bcec-620190e9ebde"]]
+  [1m[36mTRANSACTION (4.1ms)[0m  [1m[36mcommit transaction[0m
+Completed 200 OK in 256ms (Views: 0.1ms | ActiveRecord: 7.1ms | Allocations: 26034)
+
+
+Started POST "/users" for ::1 at 2024-04-24 13:50:50 +0700
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"admin15@gmail.com", "password"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"admin15@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin15@gmail.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+Completed 422 Unprocessable Entity in 214ms (Views: 0.1ms | ActiveRecord: 1.5ms | Allocations: 3552)
+
+
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+Started POST "/users" for ::1 at 2024-04-24 13:55:27 +0700
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"admin1501@gmail.com", "password"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"admin1501@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin1501@gmail.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at", "jti") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "admin1501@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2024-04-24 06:55:27.467857"], ["updated_at", "2024-04-24 06:55:27.467857"], ["jti", "0e6e045e-68bd-4f56-9f0f-1b2a50ce6efb"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+Completed 200 OK in 240ms (Views: 0.1ms | ActiveRecord: 1.6ms | Allocations: 10052)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 13:55:43 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 12ms (ActiveRecord: 0.1ms | Allocations: 5956)
+
+
+  
+NoMethodError (undefined method `respond_to' for #<Users::SessionsController:0x00000000009fd8>
+
+    respond_to do |format|
+    ^^^^^^^^^^
+Did you mean?  respond_to?
+               respond_with
+               responder
+               responder?
+               responder=):
+  
+devise (4.9.4) app/controllers/devise/sessions_controller.rb:78:in `respond_to_on_destroy'
+devise (4.9.4) app/controllers/devise/sessions_controller.rb:31:in `destroy'
+actionpack (7.1.3.2) lib/action_controller/metal/basic_implicit_render.rb:6:in `send_action'
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:224:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/rendering.rb:165:in `process_action'
+actionpack (7.1.3.2) lib/abstract_controller/callbacks.rb:259:in `block in process_action'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:110:in `run_callbacks'
+actionpack (7.1.3.2) lib/abstract_controller/callbacks.rb:258:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/rescue.rb:25:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/instrumentation.rb:74:in `block in process_action'
+activesupport (7.1.3.2) lib/active_support/notifications.rb:206:in `block in instrument'
+activesupport (7.1.3.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.1.3.2) lib/active_support/notifications.rb:206:in `instrument'
+actionpack (7.1.3.2) lib/action_controller/metal/instrumentation.rb:73:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/params_wrapper.rb:261:in `process_action'
+activerecord (7.1.3.2) lib/active_record/railties/controller_runtime.rb:32:in `process_action'
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:160:in `process'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:227:in `dispatch'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:309:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:49:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/mapper.rb:21:in `block in <class:Constraints>'
+actionpack (7.1.3.2) lib/action_dispatch/routing/mapper.rb:51:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:51:in `block in serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:131:in `block in find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `each'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:882:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware/token_dispatcher.rb:20:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware/revocation_manager.rb:21:in `call'
+rack (3.0.10) lib/rack/builder.rb:264:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware.rb:22:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/cookies.rb:689:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.0.10) lib/rack/etag.rb:29:in `call'
+rack (3.0.10) lib/rack/conditional_get.rb:43:in `call'
+rack (3.0.10) lib/rack/head.rb:15:in `call'
+activerecord (7.1.3.2) lib/active_record/migration.rb:655:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (7.1.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `block in tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:39:in `tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `tagged'
+activesupport (7.1.3.2) lib/active_support/broadcast_logger.rb:240:in `method_missing'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/remote_ip.rb:92:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/request_id.rb:28:in `call'
+rack (3.0.10) lib/rack/runtime.rb:24:in `call'
+activesupport (7.1.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:59:in `block in call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:24:in `collect_events'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:58:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/static.rb:25:in `call'
+rack (3.0.10) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/host_authorization.rb:141:in `call'
+rack-cors (2.0.2) lib/rack/cors.rb:102:in `call'
+railties (7.1.3.2) lib/rails/engine.rb:536:in `call'
+puma (6.4.2) lib/puma/configuration.rb:272:in `call'
+puma (6.4.2) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.2) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.2) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.2) lib/puma/server.rb:464:in `process_client'
+puma (6.4.2) lib/puma/server.rb:245:in `block in run'
+puma (6.4.2) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 14:14:08 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 10ms (Views: 0.1ms | ActiveRecord: 1.1ms | Allocations: 7254)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[36mUser Update (0.2ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "e4e4582f-66cd-474a-9233-1854e01420ac"], ["id", 3]]
+Started POST "/users" for ::1 at 2024-04-24 14:14:49 +0700
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"admin1801@gmail.com", "password"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"admin1801@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (3.8ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin1801@gmail.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at", "jti") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "admin1801@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2024-04-24 07:14:50.216218"], ["updated_at", "2024-04-24 07:14:50.216218"], ["jti", "47173c43-4428-496d-bcba-a555340077f7"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Completed 200 OK in 234ms (Views: 0.3ms | ActiveRecord: 4.2ms | Allocations: 5793)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 14:18:17 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:22:in `respond_to_on_destroy'
+Completed 200 OK in 70477ms (Views: 0.8ms | ActiveRecord: 1.8ms | Allocations: 178498)
+
+
+  [1m[36mCACHE User Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  [1m[36mUser Update (0.7ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "8357f9ce-de96-4f31-8292-1e1ccdca8d5d"], ["id", 4]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+Started POST "/users/sign_in" for ::1 at 2024-04-24 14:21:30 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"admin1801@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"admin1801@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "admin1801@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 214ms (Views: 0.3ms | ActiveRecord: 1.3ms | Allocations: 7520)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 14:21:45 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.3ms | Allocations: 2644)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+  [1m[36mUser Update (0.2ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "4ecccf76-0e91-4e4e-be07-d5aa04fe25e7"], ["id", 4]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddFieldToUser (20240424074358)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.5ms)[0m  [1m[35mALTER TABLE "users" ADD "fullname" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "username" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "address" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "role" integer DEFAULT 0[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "day_of_birth" datetime(6)[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddFieldToUser (20240424074358)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mALTER TABLE "users" ADD "fullname" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "username" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "address" varchar[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "users" ADD "role" integer DEFAULT 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "users" ADD "day_of_birth" datetime(6)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "users" ADD "gender" integer DEFAULT 0[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240424074358') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/users" for ::1 at 2024-04-24 14:55:43 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}}
+[31mUnpermitted parameters: :fullname, :username, :address. Context: { controller: Users::RegistrationsController, action: create, request: #<ActionDispatch::Request:0x00007f71fcb860d0>, params: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "controller"=>"users/registrations", "action"=>"create", "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}} }[0m
+Completed 500 Internal Server Error in 3ms (ActiveRecord: 0.0ms | Allocations: 886)
+
+
+  
+RuntimeError (Undeclared attribute type for enum 'role'. Enums must be backed by a database column or declared with an explicit type via `attribute`.):
+  
+activerecord (7.1.3.2) lib/active_record/enum.rb:250:in `block in _enum'
+activerecord (7.1.3.2) lib/active_record/attributes.rb:225:in `block in attribute'
+activerecord (7.1.3.2) lib/active_record/attributes.rb:266:in `block in load_schema!'
+activerecord (7.1.3.2) lib/active_record/attributes.rb:265:in `each'
+activerecord (7.1.3.2) lib/active_record/attributes.rb:265:in `load_schema!'
+activerecord (7.1.3.2) lib/active_record/encryption/encryptable_record.rb:127:in `load_schema!'
+activerecord (7.1.3.2) lib/active_record/model_schema.rb:563:in `block in load_schema'
+activerecord (7.1.3.2) lib/active_record/model_schema.rb:560:in `synchronize'
+activerecord (7.1.3.2) lib/active_record/model_schema.rb:560:in `load_schema'
+activerecord (7.1.3.2) lib/active_record/model_schema.rb:441:in `attribute_types'
+activerecord (7.1.3.2) lib/active_record/attribute_methods.rb:256:in `_has_attribute?'
+activerecord (7.1.3.2) lib/active_record/inheritance.rb:61:in `new'
+devise (4.9.4) lib/devise/models/registerable.rb:22:in `new_with_session'
+devise (4.9.4) app/controllers/devise/registrations_controller.rb:100:in `build_resource'
+devise (4.9.4) app/controllers/devise/registrations_controller.rb:17:in `create'
+actionpack (7.1.3.2) lib/action_controller/metal/basic_implicit_render.rb:6:in `send_action'
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:224:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/rendering.rb:165:in `process_action'
+actionpack (7.1.3.2) lib/abstract_controller/callbacks.rb:259:in `block in process_action'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:110:in `run_callbacks'
+actionpack (7.1.3.2) lib/abstract_controller/callbacks.rb:258:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/rescue.rb:25:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/instrumentation.rb:74:in `block in process_action'
+activesupport (7.1.3.2) lib/active_support/notifications.rb:206:in `block in instrument'
+activesupport (7.1.3.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.1.3.2) lib/active_support/notifications.rb:206:in `instrument'
+actionpack (7.1.3.2) lib/action_controller/metal/instrumentation.rb:73:in `process_action'
+actionpack (7.1.3.2) lib/action_controller/metal/params_wrapper.rb:261:in `process_action'
+activerecord (7.1.3.2) lib/active_record/railties/controller_runtime.rb:32:in `process_action'
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:160:in `process'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:227:in `dispatch'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:309:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:49:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/mapper.rb:21:in `block in <class:Constraints>'
+actionpack (7.1.3.2) lib/action_dispatch/routing/mapper.rb:51:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:51:in `block in serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:131:in `block in find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `each'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:882:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware/token_dispatcher.rb:20:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware/revocation_manager.rb:21:in `call'
+rack (3.0.10) lib/rack/builder.rb:264:in `call'
+warden-jwt_auth (0.8.0) lib/warden/jwt_auth/middleware.rb:22:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/cookies.rb:689:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.0.10) lib/rack/etag.rb:29:in `call'
+rack (3.0.10) lib/rack/conditional_get.rb:43:in `call'
+rack (3.0.10) lib/rack/head.rb:15:in `call'
+activerecord (7.1.3.2) lib/active_record/migration.rb:655:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (7.1.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `block in tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:39:in `tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `tagged'
+activesupport (7.1.3.2) lib/active_support/broadcast_logger.rb:240:in `method_missing'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/remote_ip.rb:92:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/request_id.rb:28:in `call'
+rack (3.0.10) lib/rack/runtime.rb:24:in `call'
+activesupport (7.1.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:59:in `block in call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:24:in `collect_events'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:58:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/static.rb:25:in `call'
+rack (3.0.10) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/host_authorization.rb:141:in `call'
+rack-cors (2.0.2) lib/rack/cors.rb:102:in `call'
+railties (7.1.3.2) lib/rails/engine.rb:536:in `call'
+puma (6.4.2) lib/puma/configuration.rb:272:in `call'
+puma (6.4.2) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.2) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.2) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.2) lib/puma/server.rb:464:in `process_client'
+puma (6.4.2) lib/puma/server.rb:245:in `block in run'
+puma (6.4.2) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+Started POST "/users" for ::1 at 2024-04-24 14:58:22 +0700
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}}
+[31mUnpermitted parameters: :fullname, :username, :address. Context: { controller: Users::RegistrationsController, action: create, request: #<ActionDispatch::Request:0x00007f71f6a6a3f0>, params: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "controller"=>"users/registrations", "action"=>"create", "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}} }[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 262ms (Views: 0.2ms | ActiveRecord: 3.5ms | Allocations: 22910)
+
+
+Started POST "/users" for ::1 at 2024-04-24 15:00:51 +0700
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}}
+[31mUnpermitted parameters: :fullname, :username, :address. Context: { controller: Users::RegistrationsController, action: create, request: #<ActionDispatch::Request:0x00007f71f6810d98>, params: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "controller"=>"users/registrations", "action"=>"create", "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}} }[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 226ms (Views: 0.2ms | ActiveRecord: 5.1ms | Allocations: 13397)
+
+
+Started POST "/users" for ::1 at 2024-04-24 15:01:21 +0700
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}, "registration"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]", "fullname"=>"khanh phung", "username"=>"pmk", "address"=>"thu duc"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (3.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at", "jti", "fullname", "username", "address", "role", "day_of_birth", "gender") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "khanhphung18@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2024-04-24 08:01:22.212745"], ["updated_at", "2024-04-24 08:01:22.212745"], ["jti", "b942d340-8bdb-46bd-9ab4-7839b4a7790f"], ["fullname", "khanh phung"], ["username", "pmk"], ["address", "thu duc"], ["role", 0], ["day_of_birth", nil], ["gender", 0]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+Completed 200 OK in 239ms (Views: 1.0ms | ActiveRecord: 8.5ms | Allocations: 13437)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:02:20 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 11ms (Views: 0.1ms | ActiveRecord: 0.3ms | Allocations: 3316)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Update (0.2ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "38050049-8046-4ef6-8e90-3c8bbee5a67e"], ["id", 5]]
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:03:11 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 213ms (Views: 0.3ms | ActiveRecord: 0.2ms | Allocations: 1954)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:03:31 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 5ms (Views: 0.2ms | ActiveRecord: 0.2ms | Allocations: 2192)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Update (0.2ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "6e31e74b-c1b3-4531-8ec5-38f4a884f431"], ["id", 5]]
+Started GET "/" for 127.0.0.1 at 2024-04-24 15:09:31 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/nus/.rvm/gems/ruby-3.1.2/gems/railties-7.1.3.2/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/nus/.rvm/gems/ruby-3.1.2/gems/railties-7.1.3.2/lib/rails/templates/rails/welcome/index.html.erb (Duration: 1.4ms | Allocations: 382)
+Completed 200 OK in 39ms (Views: 15.2ms | ActiveRecord: 0.0ms | Allocations: 6360)
+
+
+Started GET "/djfsjdk" for 127.0.0.1 at 2024-04-24 15:09:34 +0700
+  
+ActionController::RoutingError (No route matches [GET] "/djfsjdk"):
+  
+Started GET "/users" for ::1 at 2024-04-24 15:11:02 +0700
+Processing by UsersController#index as */*
+Completed 401 Unauthorized in 7ms (ActiveRecord: 0.0ms | Allocations: 1868)
+
+
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:11:12 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 270ms (Views: 2.4ms | ActiveRecord: 2.3ms | Allocations: 27284)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:11:22 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 21ms (Views: 11.2ms | ActiveRecord: 0.4ms | Allocations: 3040)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:12:47 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>2}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.8ms | ActiveRecord: 0.1ms | Allocations: 2597)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:13:13 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    "user":{
+        "id":
+    }
+}
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 5ms (Views: 2.1ms | ActiveRecord: 0.1ms | Allocations: 2630)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:13:19 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>2}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.8ms | ActiveRecord: 0.4ms | Allocations: 2585)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:13:29 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    "user":{
+        "id": 2,
+        "email": "admin15@gmail.com",
+    }
+}
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 6ms (Views: 3.0ms | ActiveRecord: 0.2ms | Allocations: 2600)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:14:01 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 13ms (Views: 2.2ms | ActiveRecord: 1.6ms | Allocations: 10026)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:14:10 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>2}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 3ms (Views: 1.3ms | ActiveRecord: 0.1ms | Allocations: 2590)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:14:20 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>2}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.1ms | Allocations: 1486)
+
+
+Started GET "/users/user_id" for ::1 at 2024-04-24 15:14:35 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>2}, "id"=>"user_id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.1ms | Allocations: 1474)
+
+
+Started GET "/users/user_id" for ::1 at 2024-04-24 15:15:10 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>2}, "id"=>"user_id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 12ms (ActiveRecord: 1.5ms | Allocations: 9392)
+
+
+  
+NoMethodError (undefined method `crurrent_user' for nil:NilClass
+
+    render json: @user.crurrent_user
+                      ^^^^^^^^^^^^^^):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/user_id" for ::1 at 2024-04-24 15:15:21 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>2}, "id"=>"user_id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 11ms (ActiveRecord: 1.8ms | Allocations: 9316)
+
+
+  
+NoMethodError (undefined method `current_user' for nil:NilClass
+
+    render json: @user.current_user
+                      ^^^^^^^^^^^^^):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/user_id" for ::1 at 2024-04-24 15:15:28 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>2}, "id"=>"user_id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 12ms (Views: 0.2ms | ActiveRecord: 1.4ms | Allocations: 8713)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:15:36 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>2}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 7ms (Views: 4.1ms | ActiveRecord: 0.2ms | Allocations: 2721)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:15:43 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>2}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1374)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:15:47 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1383)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:16:01 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1368)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:16:04 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 5ms (Views: 2.2ms | ActiveRecord: 0.2ms | Allocations: 2580)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:16:19 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    {
+        "id": "1"
+    }
+}
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.6ms | ActiveRecord: 0.1ms | Allocations: 2572)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:16:31 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>"1"}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.7ms | ActiveRecord: 0.1ms | Allocations: 2571)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:16:43 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>"1"}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1386)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:16:51 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    {
+        "id": "1"
+    }
+}
+Processing by UsersController#show as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1395)
+
+
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", nil], ["LIMIT", 1]]
+Started GET "/users/" for ::1 at 2024-04-24 15:20:15 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>"1"}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 14ms (Views: 2.3ms | ActiveRecord: 2.5ms | Allocations: 10004)
+
+
+Started GET "/users/" for ::1 at 2024-04-24 15:20:33 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"email"=>"admin@gmail.com"}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 2.3ms | ActiveRecord: 0.1ms | Allocations: 2582)
+
+
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:22:10 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.3ms | ActiveRecord: 0.1ms | Allocations: 2292)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:24:00 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 2.2ms | ActiveRecord: 0.1ms | Allocations: 2586)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:24:41 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 22ms (ActiveRecord: 0.1ms | Allocations: 4026)
+
+
+  
+JWT::VerificationError (Signature verification failed):
+  
+app/controllers/users/sessions_controller.rb:16:in `respond_to_on_destroy'
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:25:59 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 4ms (Views: 0.5ms | ActiveRecord: 0.1ms | Allocations: 1940)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:26:15 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 6ms (Views: 0.2ms | ActiveRecord: 0.3ms | Allocations: 2446)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Update (39.1ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "c82e955a-13b1-4ccf-bbe2-0b4163b569c9"], ["id", 5]]
+Started GET "/users" for ::1 at 2024-04-24 15:26:24 +0700
+Processing by UsersController#index as */*
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms | Allocations: 325)
+
+
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:26:36 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 204ms (Views: 0.3ms | ActiveRecord: 0.1ms | Allocations: 1891)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:26:42 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.8ms | ActiveRecord: 0.1ms | Allocations: 2591)
+
+
+Started GET "/users/1" for ::1 at 2024-04-24 15:26:55 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 16ms (ActiveRecord: 0.1ms | Allocations: 5521)
+
+
+  
+NoMethodError (undefined method `current_us' for User:Class
+Did you mean?  current_scope):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/1" for ::1 at 2024-04-24 15:27:07 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 14ms (Views: 0.1ms | ActiveRecord: 1.1ms | Allocations: 8694)
+
+
+Started GET "/users/%221%22" for ::1 at 2024-04-24 15:27:15 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"\"1\""}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1393)
+
+
+Started GET "/users/" for ::1 at 2024-04-24 15:27:47 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>1}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.7ms | ActiveRecord: 0.1ms | Allocations: 2709)
+
+
+Started GET "/users/" for ::1 at 2024-04-24 15:28:06 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com"}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.6ms | ActiveRecord: 0.1ms | Allocations: 2577)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:28:12 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com"}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1380)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:28:21 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>"1"}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1383)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:28:48 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>"1"}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1386)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:28:54 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1374)
+
+
+Started GET "/users/show" for ::1 at 2024-04-24 15:29:01 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"show"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1393)
+
+
+Started GET "/users/show" for ::1 at 2024-04-24 15:29:43 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"show"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1374)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:29:59 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>1}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 6ms (Views: 3.2ms | ActiveRecord: 0.1ms | Allocations: 2577)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:30:13 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    "user": {
+        1
+    }
+}
+Processing by UsersController#show as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1390)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:30:25 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1389)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:31:03 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    "user": {
+        1
+    }
+}
+Processing by UsersController#show as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1393)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:32:05 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    "user": {
+        "id":
+    }
+}
+Processing by UsersController#show as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1393)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:32:18 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1375)
+
+
+Started GET "/users/1" for ::1 at 2024-04-24 15:32:33 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1365)
+
+
+Started GET "/users/5" for ::1 at 2024-04-24 15:33:12 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"5"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1377)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:34:07 +0700
+Error occurred while parsing request parameters.
+Contents:
+
+{
+    "user": {
+        id : 5
+    }
+}
+Processing by UsersController#show as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1399)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:34:20 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1374)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:34:39 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 14ms (ActiveRecord: 1.4ms | Allocations: 9401)
+
+
+  
+NoMethodError (undefined method `id' for nil:NilClass
+
+    render json: @user.id
+                      ^^^):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/id" for ::1 at 2024-04-24 15:35:07 +0700
+  
+SyntaxError (/home/nus/Resss/app/controllers/users_controller.rb:8: syntax error, unexpected '\n', expecting =>
+...   render json: {@user.fullname
+...                               ^
+/home/nus/Resss/app/controllers/users_controller.rb:21: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/users_controller.rb:8: syntax error, unexpected '\n', expecting =>
+app/controllers/users_controller.rb:21: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/users/id" for ::1 at 2024-04-24 15:36:05 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 12ms (ActiveRecord: 1.5ms | Allocations: 9378)
+
+
+  
+NoMethodError (undefined method `fullname' for nil:NilClass
+
+    render json: {status: @user.fullname}
+                               ^^^^^^^^^):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/id" for ::1 at 2024-04-24 15:36:09 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 2ms (ActiveRecord: 0.1ms | Allocations: 2079)
+
+
+  
+NoMethodError (undefined method `fullname' for nil:NilClass
+
+    render json: {status: @user.fullname}
+                               ^^^^^^^^^):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/id" for ::1 at 2024-04-24 15:37:13 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 11ms (Views: 0.2ms | ActiveRecord: 1.4ms | Allocations: 8709)
+
+
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Started GET "/users/id" for ::1 at 2024-04-24 15:38:25 +0700
+  
+SyntaxError (/home/nus/Resss/app/controllers/users_controller.rb:8: syntax error, unexpected '(', expecting `end'
+    render json: @user(user.id)
+                      ^
+/home/nus/Resss/app/controllers/users_controller.rb:8: syntax error, unexpected ')', expecting `end'
+    render json: @user(user.id)
+                              ^
+/home/nus/Resss/app/controllers/users_controller.rb:20: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/users_controller.rb:8: syntax error, unexpected '(', expecting `end'
+app/controllers/users_controller.rb:8: syntax error, unexpected ')', expecting `end'
+app/controllers/users_controller.rb:20: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/users/id" for ::1 at 2024-04-24 15:38:41 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 500 Internal Server Error in 11ms (ActiveRecord: 1.1ms | Allocations: 9401)
+
+
+  
+NoMethodError (undefined method `id' for nil:NilClass
+
+    render json: @user.id
+                      ^^^):
+  
+app/controllers/users_controller.rb:8:in `show'
+Started GET "/users/id" for ::1 at 2024-04-24 15:39:46 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>5}, "id"=>"id"}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 16ms (Views: 0.2ms | ActiveRecord: 1.4ms | Allocations: 8903)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:39:54 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1516)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:40:03 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1491)
+
+
+Started GET "/users/" for ::1 at 2024-04-24 15:40:08 +0700
+Processing by UsersController#index as */*
+  Parameters: {"user"=>{"id"=>1}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 6ms (Views: 2.8ms | ActiveRecord: 0.3ms | Allocations: 2664)
+
+
+Started GET "/users/1" for ::1 at 2024-04-24 15:40:15 +0700
+Processing by UsersController#show as */*
+  Parameters: {"user"=>{"id"=>1}, "id"=>"1"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1509)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:40:33 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 5ms (Views: 2.1ms | ActiveRecord: 0.1ms | Allocations: 2589)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:40:40 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.1ms | Allocations: 1524)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:40:51 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 8ms (Views: 0.3ms | ActiveRecord: 0.3ms | Allocations: 3130)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "0466256d-859b-4909-95a0-e1d0e5c242c1"], ["id", 5]]
+Started GET "/users/id" for ::1 at 2024-04-24 15:40:53 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms | Allocations: 278)
+
+
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:40:58 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"khanhphung18@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "khanhphung18@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 208ms (Views: 0.4ms | ActiveRecord: 0.2ms | Allocations: 1998)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:41:00 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1506)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:41:03 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1491)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:41:11 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 3ms (Views: 1.4ms | ActiveRecord: 0.1ms | Allocations: 2575)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:41:33 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1521)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:41:53 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1506)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:42:33 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+Completed 200 OK in 10ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1506)
+
+
+Started POST "/users" for ::1 at 2024-04-24 15:45:16 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Users::RegistrationsController#create as */*
+  Parameters: {"user"=>{"username"=>"ZenS", "email"=>"zen05@gmail.com", "password"=>"[FILTERED]", "fullname"=>"admin zen", "address"=>"thu duc"}, "registration"=>{"user"=>{"username"=>"ZenS", "email"=>"zen05@gmail.com", "password"=>"[FILTERED]", "fullname"=>"admin zen", "address"=>"thu duc"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists? (1.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at", "jti", "fullname", "username", "address", "role", "day_of_birth", "gender") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "zen05@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2024-04-24 08:45:16.348543"], ["updated_at", "2024-04-24 08:45:16.348543"], ["jti", "6285d6d3-47df-48da-909b-6f65678629dd"], ["fullname", "admin zen"], ["username", "ZenS"], ["address", "thu duc"], ["role", 0], ["day_of_birth", nil], ["gender", 0]]
+  [1m[36mTRANSACTION (3.8ms)[0m  [1m[36mcommit transaction[0m
+Completed 200 OK in 263ms (Views: 0.4ms | ActiveRecord: 7.2ms | Allocations: 34484)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:45:39 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 29ms (Views: 0.1ms | ActiveRecord: 0.4ms | Allocations: 5115)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Update (0.1ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "8d282771-2f92-4a73-ac66-ddfdd7002a8b"], ["id", 6]]
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:45:52 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"username"=>"ZenS", "email"=>"zen05@gmail.com"}, "session"=>{"user"=>{"username"=>"ZenS", "email"=>"zen05@gmail.com"}}}
+Completed 401 Unauthorized in 2ms (ActiveRecord: 0.0ms | Allocations: 535)
+
+
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:46:10 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 220ms (Views: 0.4ms | ActiveRecord: 0.3ms | Allocations: 3829)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:46:22 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 4ms (Views: 1.6ms | ActiveRecord: 0.2ms | Allocations: 3206)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:46:32 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.1ms | Allocations: 1521)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:46:38 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 8ms (Views: 0.2ms | ActiveRecord: 0.2ms | Allocations: 2250)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Update (0.3ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "70660791-3345-4b18-a882-3e2c89d393d1"], ["id", 6]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddAvatarToUsers (20240424085027)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (6.0ms)[0m  [1m[35mALTER TABLE "users" ADD "avatar" varchar[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240424085027') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:56:12 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 254ms (Views: 0.5ms | ActiveRecord: 1.6ms | Allocations: 31121)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:56:18 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 10ms (Views: 0.2ms | ActiveRecord: 0.3ms | Allocations: 4936)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Update (3.9ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "b2b32cf8-be83-4e9e-b4e0-88e845c17271"], ["id", 6]]
+Started POST "/users/sign_in" for ::1 at 2024-04-24 15:56:22 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (17.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 227ms (Views: 0.3ms | ActiveRecord: 17.5ms | Allocations: 1974)
+
+
+Started GET "/users" for ::1 at 2024-04-24 15:56:25 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 7ms (Views: 2.9ms | ActiveRecord: 0.3ms | Allocations: 3381)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:56:29 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1562)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 15:56:35 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 6ms (Views: 0.2ms | ActiveRecord: 0.2ms | Allocations: 2305)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Update (0.4ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "a6e53619-f33c-4e17-bf53-f3eebe6f2d01"], ["id", 6]]
+Started GET "/users" for ::1 at 2024-04-24 15:56:38 +0700
+Processing by UsersController#index as */*
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms | Allocations: 335)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 15:56:40 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms | Allocations: 264)
+
+
+Started POST "/users/sign_in" for ::1 at 2024-04-24 16:25:04 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 255ms (Views: 0.5ms | ActiveRecord: 2.8ms | Allocations: 31121)
+
+
+Started DELETE "/users/sign_out" for ::1 at 2024-04-24 16:25:09 +0700
+Processing by Users::SessionsController#destroy as */*
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/users/sessions_controller.rb:18:in `respond_to_on_destroy'
+Completed 200 OK in 12ms (Views: 0.2ms | ActiveRecord: 0.5ms | Allocations: 4936)
+
+
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Update (3.8ms)[0m  [1m[33mUPDATE "users" SET "jti" = ? WHERE "users"."id" = ?[0m  [["jti", "23598ab8-16da-4a4b-8520-8c00dc8cbc68"], ["id", 6]]
+Started POST "/users/sign_in" for ::1 at 2024-04-24 16:25:12 +0700
+Processing by Users::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"zen05@gmail.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "zen05@gmail.com"], ["LIMIT", 1]]
+Completed 200 OK in 207ms (Views: 0.3ms | ActiveRecord: 0.1ms | Allocations: 1988)
+
+
+Started GET "/users" for ::1 at 2024-04-24 16:25:15 +0700
+Processing by UsersController#index as */*
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  ↳ app/controllers/users_controller.rb:4:in `index'
+Completed 200 OK in 6ms (Views: 2.8ms | ActiveRecord: 0.2ms | Allocations: 3378)
+
+
+Started GET "/users/id" for ::1 at 2024-04-24 16:25:17 +0700
+Processing by UsersController#show as */*
+  Parameters: {"id"=>"id"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.1ms | Allocations: 1535)
+
+
