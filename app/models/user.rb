@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
   # Include default devise modules. Others available are:
@@ -10,10 +11,9 @@ class User < ApplicationRecord
     super
   end
 
-
   mount_uploader :avatar, AvatarUploader
-  
-  enum :gender,[:"Khác", :"Nam", :"Nữ"]
+
+  enum :gender, [:"Khác", :"Nam", :"Nữ"]
   enum :role, [:"Khách hàng", :"Nhân viên"]
 
   validates :fullname, presence: true, length: { minimum: 3, maximum: 50 }

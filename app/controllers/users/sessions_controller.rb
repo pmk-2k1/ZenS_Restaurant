@@ -7,25 +7,24 @@ class Users::SessionsController < Devise::SessionsController
 
   def respond_with(_resource, _options = {})
     render json: {
-      status: { code: 200, message: "User signed in successfully",
-     data: current_user}
+      status: { code: 200, message: 'User signed in successfully',
+                data: current_user }
     }, status: :ok
   end
 
   def respond_to_on_destroy
-    jwt_payload = JWT.decode(request.headers['Authorization'].split(' ')[1], 
-    Rails.application.credentials.fetch(:secret_key_base)).first
+    jwt_payload = JWT.decode(request.headers['Authorization'].split(' ')[1],
+                             Rails.application.credentials.fetch(:secret_key_base)).first
     current_user = User.find(jwt_payload['sub'])
-
     if current_user
       render json: {
         status: 200,
-        message: "Signed out successfully"
+        message: 'Signed out successfully'
       }, status: :ok
     else
       render json: {
         status: 401,
-        message: "Use had no active session"
+        message: 'Use had no active session'
       }, status: :unauthorized
     end
   end

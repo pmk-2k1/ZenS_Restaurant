@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
 
   def index
@@ -9,6 +11,7 @@ class UsersController < ApplicationController
       user: current_user.as_json(except: :jti)
     }, status: :ok
   end
+
   private
 
   def set_user
