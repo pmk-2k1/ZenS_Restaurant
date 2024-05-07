@@ -3,12 +3,29 @@
 class Users::SessionsController < Devise::SessionsController
   respond_to :json
 
+  SECRET_KEY = Rails.application.secret_key_base
+  def jwt_encode(payload, exp = 30.minutes.from_now)
+    payload[:exp] = exp.to_i
+    JWT.encode(payload, SECRET_KEY)
+  end
+
   private
 
   def respond_with(_resource, _options = {})
+    access_token = jwt_encode(user_id: current_user.id)
     render json: {
       status: { code: 200, message: 'User signed in successfully',
-                data: current_user }
+                data: {
+                  email: current_user.email,
+                  fullname: current_user.fullname,
+                  username: current_user.username,
+                  address: current_user.address,
+                  roll: current_user.role,
+                  day_of_birth: current_user.day_of_birth,
+                  gender: current_user.gender,
+                  avatar: current_user.avatar,
+                  access_token: access_token
+                } }
     }, status: :ok
   end
 

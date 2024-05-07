@@ -9,7 +9,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if resource.persisted?
       render json: {
         status: { code: 200, message: 'Signed up successfully',
-                  data: resource }
+                  data: {
+                    email: current_user.email,
+                    fullname: current_user.fullname,
+                    username: current_user.username,
+                    address: current_user.address,
+                    roll: current_user.role,
+                    day_of_birth: current_user.day_of_birth,
+                    gender: current_user.gender,
+                    avatar: current_user.avatar
+                  } }
       }, status: :ok
     else
       render json: {
