@@ -36,20 +36,20 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.delivery_method = :smtp
-  # config.action_mailer.smtp_settings = {
-  #   address: '127.0.0.1',
-  #   port: 1025
-  # }
   config.action_mailer.smtp_settings = {
-    enable_starttls_auto: true,
-    address: 'smtp.gmail.com',
-    port: 587,
-    domain: 'smtp.gmail.com',
-    user_name: 'khoanhsac.khanh18@gmail.com',  # Tên tài khoản gmail mà các bạn tạo mật khẩu ứng dụng.
-    password: 'oqnl afai cfxw vnhh',      # Mật khẩu ứng dụng của các bạn. (ở đây mình cố tình thay bằng dấu * đấy)
-    authentication: :plain
+    address: '127.0.0.1',
+    port: 1025
   }
-  config.action_mailer.perform_caching = false
+  # config.action_mailer.smtp_settings = {
+  #   enable_starttls_auto: true,
+  #   address: 'smtp.gmail.com',
+  #   port: 587,
+  #   domain: 'smtp.gmail.com',
+  #   user_name: 'khoanhsac.khanh18@gmail.com',  # Tên tài khoản gmail mà các bạn tạo mật khẩu ứng dụng.
+  #   password: 'oqnl afai cfxw vnhh',      # Mật khẩu ứng dụng của các bạn. (ở đây mình cố tình thay bằng dấu * đấy)
+  #   authentication: :plain
+  # }
+  # config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
